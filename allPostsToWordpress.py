@@ -50,7 +50,7 @@ def appendComment(item, ljComment, parentCommentId, username, wpUrl):
     thisCommentId = nextCommentId
     nextCommentId = nextCommentId + 1
     ET.SubElement(commentElem, 'wp:comment_id').text = str(thisCommentId)
-    if 'username' in ljComment:
+    if 'username' in ljComment.attrib:
         ET.SubElement(commentElem, 'wp:comment_author').text = ljComment.attrib['username']
     ET.SubElement(commentElem, 'wp:comment_author_url')
     ET.SubElement(commentElem, 'wp:comment_author_IP')
