@@ -21,7 +21,12 @@ def addPost(post, channel, username, wpUrl, doProtected, protectedPassword, doCo
     ET.SubElement(item, 'wp:post_date_gmt').text = pubDate.astimezone(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
     ET.SubElement(item, 'wp:comment_status').text = 'open'
     ET.SubElement(item, 'wp:ping_status').text = 'open'
-    ET.SubElement(item, 'wp:post_name').text = post.get('linkId')
+    postTitle = post.find('title').text.strip().lower()
+    wordChar = re.sub('[^\s\w]', '', postTitle)
+    if postTitle == '(no subject)':
+        ET.SubElement(item, 'wp:post_name').text = post.get('linkId')
+    else:
+        ET.SubElement(item, 'wp:post_name').text = consolidateJoinedSpaces(spacesToDashes(wordChar))
     ET.SubElement(item, 'wp:status').text = 'publish'
     ET.SubElement(item, 'wp:post_parent').text = '0'
     ET.SubElement(item, 'wp:menu_order').text = '1'
@@ -105,6 +110,9 @@ def main(inFile, outFile, options):
     indent(rss)
     outRoot.write(outFile, encoding='UTF-8', xml_declaration=True)
     #ET.dump(outRoot)
+
+def spacesToDashes(d):
+    return d.replace(' ', '-')
 
 def consolidateJoinedSpaces(s):
     # https://stackoverflow.com/questions/2077897/substitute-multiple-whitespace-with-single-whitespace-in-python
