@@ -21,9 +21,9 @@ def addPost(post, channel, username, wpUrl, doProtected, protectedPassword, doCo
     ET.SubElement(item, 'wp:post_date_gmt').text = pubDate.astimezone(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
     ET.SubElement(item, 'wp:comment_status').text = 'open'
     ET.SubElement(item, 'wp:ping_status').text = 'open'
-    postTitle = post.find('title').text.strip().lower()
+    safeTitle = post.find('title').text.strip().lower()
     wordChar = re.sub('[^\s\w]', '', postTitle)
-    if postTitle == '(no subject)':
+    if safeTitle == '(no subject)':
         ET.SubElement(item, 'wp:post_name').text = post.get('linkId')
     else:
         ET.SubElement(item, 'wp:post_name').text = consolidateJoinedSpaces(spacesToDashes(wordChar))
