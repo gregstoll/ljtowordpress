@@ -22,11 +22,12 @@ def addPost(post, channel, username, wpUrl, doProtected, protectedPassword, doCo
     ET.SubElement(item, 'wp:comment_status').text = 'open'
     ET.SubElement(item, 'wp:ping_status').text = 'open'
     safeTitle = post.find('title').text.strip().lower()
-    wordChar = re.sub('[^\s\w]', '', postTitle)
+    permalink = re.sub('[^\s\w]', '', safeTitle)
     if safeTitle == '(no subject)':
-        ET.SubElement(item, 'wp:post_name').text = post.get('linkId')
+        postName = post.get('linkId')
     else:
-        ET.SubElement(item, 'wp:post_name').text = consolidateJoinedSpaces(spacesToDashes(wordChar))
+        postName = spacesToDashes(permalink)
+    ET.SubElement(item, 'wp:post_name').text = postName
     ET.SubElement(item, 'wp:status').text = 'publish'
     ET.SubElement(item, 'wp:post_parent').text = '0'
     ET.SubElement(item, 'wp:menu_order').text = '1'
