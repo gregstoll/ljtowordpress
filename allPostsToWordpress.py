@@ -26,7 +26,7 @@ def addPost(post, channel, username, wpUrl, doProtected, protectedPassword, doCo
     if safeTitle == '(no subject)':
         postName = post.get('linkId')
     else:
-        postName = spacesToDashes(permalink)
+        postName = spacesToDashes(consolidateJoinedSpaces(permalink))
     ET.SubElement(item, 'wp:post_name').text = postName
     ET.SubElement(item, 'wp:status').text = 'publish'
     ET.SubElement(item, 'wp:post_parent').text = '0'
