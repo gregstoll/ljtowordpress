@@ -3,7 +3,7 @@ Script to convert a LiveJournal dump made by [LJBackup](https://gregstoll.com/lj
 
 This script was created at a time when the WordPress import from LiveJournal was not working - if that's working, you should probably use that instead as it's likely to be better supported.
 
-##What does it do?
+## What does it do?
 * Preserves post titles, dates, and content
 * Can optionally import protected posts from LJ and set a password on them in WordPress.
 * Keeps a similar URL scheme, so a link to http://gregstoll.wordpress.com/495263 will bring up the post originally made at http://gregstoll.livejournal.com/495263.html
@@ -12,7 +12,7 @@ This script was created at a time when the WordPress import from LiveJournal was
 * Preserves tags
 * Turns `<lj-user>` tags into a link to that user's LiveJournal
 
-##What does it not do?
+## What does it not do?
 * Does not preserve mood, music, or location
 * Does not copy anything else from your journal other than posts (i.e. no blog title, global links, etc)
 * Does preserve the name of the author of comments, but if it's anyone other than the journal author it makes no attempt to set the author's URL, etc
@@ -22,10 +22,10 @@ This script was created at a time when the WordPress import from LiveJournal was
 * Does not preserve the author of posts (all will be set to the owner of the journal), so this probably won't work well with communities
 * Does not convert `<lj-embed>` tags
 
-##Caveats
+## Caveats
 The way LJ formats posts is a little weird, which doesn't play nice with some WordPress themes. For example, the Franklin theme has weird spacing for `<br>`'s.
 
-##How to use this
+## How to use this
 1. Use [LJBackup](https://gregstoll.com/ljbackup/) to make a backup of your LiveJournal
 2. Unzip file to a folder on your computer
 3. Move `allPostsToWordpress.py` to the same directory as `allPosts.xml`
