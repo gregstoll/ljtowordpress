@@ -82,8 +82,15 @@ def appendComment(item, ljComment, parentCommentId, username, wpUrl):
 def main(inFile, outFile, options):
     #print(inFile)
     #print(outFile)
-    tree = ET.parse(inFile)
-    root = tree.getroot()
+
+    try:
+        tree = ET.parse(inFile)
+        root = tree.getroot()
+    except ET.ParseError as ex:
+        print(ex)
+        print("Failed to parse - trying with latin-1 encoding...")
+        inFileStr = open(inFile, 'r', encoding='latin-1').read()
+        root = ET.fromstring(inFileStr)
     posts = root.findall('post')
 
     ns = {'excerpt': 'http://wordpress.org/export/1.2/excerpt/', 'content': 'http://purl.org/rss/1.0/modules/content/', 'wfw': 'http://purl.org/rss/1.0/modules/content/', 'dc': 'http://purl.org/dc/elements/1.1/', 'wp': 'http://purl.org/dc/elements/1.1/'}
