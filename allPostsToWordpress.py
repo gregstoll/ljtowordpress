@@ -6,8 +6,13 @@ import getopt
 
 nextCommentId = 1
 
-def addPost(post, channel, username, wpUrl, doProtected, protectedPassword, doComments):
-    if not doProtected and 'locked' in post.attrib and post.attrib['locked']:
+def addPost(post, channel, username, wpUrl, doProtected, failIfProtected, protectedPassword, doComments):
+    isLocked = 'locked' in post.attrib and post.attrib['locked']
+    if isLocked and failIfProtected:
+        print("No protected password specified! Either specify one or use -n to not export protected posts")
+        usage()
+        sys.exit(2)
+    if not doProtected and isLocked:
         return
     item = ET.SubElement(channel, 'item')
     ET.SubElement(item, 'title').text = consolidateJoinedSpaces(post.find('title').text)
@@ -32,7 +37,7 @@ def addPost(post, channel, username, wpUrl, doProtected, protectedPassword, doCo
     ET.SubElement(item, 'wp:post_parent').text = '0'
     ET.SubElement(item, 'wp:menu_order').text = '1'
     ET.SubElement(item, 'wp:post_type').text = 'post'
-    if 'locked' in post.attrib and post.attrib['locked']:
+    if isLocked:
         ET.SubElement(item, 'wp:post_password').text = protectedPassword
     else:
         ET.SubElement(item, 'wp:post_password').text = ''
@@ -112,7 +117,7 @@ def main(inFile, outFile, options):
         #if post.attrib['linkId'] == '493396': # protected
         #if post.attrib['linkId'] == '179819': # lj-user link
         #if post.attrib['linkId'] == '179387': # lj-cut
-            addPost(post, channel, username, options['wpUrl'], options['protected'], options['protectedPassword'], options['comments'])
+            addPost(post, channel, username, options['wpUrl'], options['protected'], options['failIfProtectedPost'], options['protectedPassword'], options['comments'])
 
     outRoot = ET.ElementTree(rss)
     indent(rss)
@@ -165,7 +170,7 @@ if (__name__ == '__main__'):
         print(err)
         usage()
         sys.exit(2)
-    options = {'protected': True, 'comments': True}
+    options = {'protected': True, 'comments': True, 'failIfProtectedPost': False}
     for o, a in opts:
         if o in ('-h', '--help'):
             usage()
@@ -203,9 +208,8 @@ if (__name__ == '__main__'):
         sys.exit(2)
     if options['protected']:
         if 'protectedPassword' not in options:
-            print("No protected password specified! Either specify one or use -n to not export protected posts")
-            usage()
-            sys.exit(2)
+            options['failIfProtectedPost'] = True
+            options['protectedPassword'] = 'jslkdfjqwlkjalskdjflqwkjerlkjasdflkjasdlkfjasdflkasdjf' # We won't actually use this, but just in case....
     else:
         if 'protectedPassword' in options:
             print("Protected password specified, but we are not exporting protected posts!")
